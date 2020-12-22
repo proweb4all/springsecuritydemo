@@ -7,3 +7,4 @@
 1. First commit (инициализация проекта)
 2. Конфигурация spring security и работа с UserDetailsService (InMemoryUserDetailsManager)
 3. Авторизация с использованием ролей (roles) 
+4. Авторизация с использованием прав доступа (authorities)
