@@ -1,5 +1,6 @@
 package ru.proweb4all.springsecuritydemo.rest;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.proweb4all.springsecuritydemo.model.Developer;
 import java.util.List;
@@ -21,6 +22,7 @@ public class DeveloperRestControllerV1 {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('developers:read')")
     public Developer getById(@PathVariable Long id) {
         return developers.stream().filter(developer -> developer.getId().equals(id))
                 .findFirst()
@@ -28,12 +30,14 @@ public class DeveloperRestControllerV1 {
     }
     
     @PostMapping
+    @PreAuthorize("hasAuthority('developers:write')")
     public Developer create(@RequestBody Developer developer) {
         this.developers.add(developer);
         return developer;
     }
     
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('developers:write')")
     public void deleteById(@PathVariable Long id) {
         this.developers.removeIf(developer -> developer.getId().equals(id));
     }
