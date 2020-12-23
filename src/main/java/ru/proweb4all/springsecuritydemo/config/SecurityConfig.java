@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import ru.proweb4all.springsecuritydemo.model.Role;
 
 @Configuration
@@ -20,13 +21,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
-                .authorizeRequests()
-                .antMatchers("/").permitAll()
-                .anyRequest()
-                .authenticated()
-                .and()
-                .httpBasic();
+            .csrf().disable()
+            .authorizeRequests()
+            .antMatchers("/").permitAll()
+            .anyRequest()
+            .authenticated()
+            .and()
+            .formLogin()
+            .loginPage("/auth/login").permitAll()
+            .defaultSuccessUrl("/auth/success")
+            .and()
+            .logout()
+            .logoutRequestMatcher(new AntPathRequestMatcher("/auth/logout", "POST"))
+            .invalidateHttpSession(true)
+            .clearAuthentication(true)
+            .deleteCookies("JSESSIONID")
+            .logoutSuccessUrl("/auth/login");
     }
 
     @Bean
